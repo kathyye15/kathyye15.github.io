@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
@@ -27,8 +26,12 @@ jobs:
       with:
         name: bundle-js-file
         path: bundle.js
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v4
+      with:
+        name: page
+        path: build
 
-  # Deployment job
   deploy:
     # Add a dependency to the build job
     needs: build
@@ -43,10 +46,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    # Specify runner
     runs-on: ubuntu-latest
     steps:
-    # Download bundles-file artifact
+      - name: Download Pages artifact
+        uses: actions/download-pages-artifact@v4
+        with: 
+          name: page
+          path: .
       - name: Download bundle.js artifact
         uses: actions/download-artifact@v4
         with: 
@@ -57,6 +63,7 @@ jobs:
     # Upload pages artifact
       - uses: actions/upload-pages-artifact@v1
         with:
+          name: page
           path: .
     # Deploy
       - name: Deploy to GitHub Pages
