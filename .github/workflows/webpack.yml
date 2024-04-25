@@ -27,12 +27,6 @@ jobs:
       with:
         name: bundle-js-file
         path: bundle.js
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        name: index-file
-        path: index.html
-
 
   # Deployment job
   deploy:
@@ -49,15 +43,24 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    # Specify runner + download artifact + deploy
+    # Specify runner
     runs-on: ubuntu-latest
     steps:
+    # Download bundles-file artifact
       - name: Download bundle.js artifact
         uses: actions/download-artifact@v4
         with: 
           name: bundle-js-file
+    # Extract various metadata
+      - name: Configure Pages
+        uses: actions/configure-pages@v1
+    # Upload pages artifact
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
+    # Deploy
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v4
         
       
