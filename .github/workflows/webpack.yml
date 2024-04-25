@@ -26,11 +26,6 @@ jobs:
       with:
         name: bundle-js-file
         path: bundle.js
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v4
-      with:
-        name: page
-        path: build
 
   deploy:
     # Add a dependency to the build job
@@ -48,11 +43,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Download Pages artifact
-        uses: actions/download-pages-artifact@v4
-        with: 
-          name: page
-          path: .
       - name: Download bundle.js artifact
         uses: actions/download-artifact@v4
         with: 
@@ -60,11 +50,6 @@ jobs:
     # Extract various metadata
       - name: Configure Pages
         uses: actions/configure-pages@v1
-    # Upload pages artifact
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          name: page
-          path: .
     # Deploy
       - name: Deploy to GitHub Pages
         id: deployment
