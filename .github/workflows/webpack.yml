@@ -13,8 +13,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
     - name: Setup node
       uses: actions/setup-node@v4
       with:
@@ -24,6 +22,11 @@ jobs:
       run: |
         npm ci
         npx webpack
+    - name: Upload bundles.js artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bundle-js-file
+        path: bundle.js
 
   # Deployment job
   deploy:
@@ -33,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Download bundle.js artifact
+        uses: actions/download-artifact@v4
+        with: 
+          name: bundle-js-file
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
