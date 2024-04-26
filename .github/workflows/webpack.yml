@@ -26,6 +26,11 @@ jobs:
       run: |
         npm ci
         npx webpack
+      env:
+        NODE_ENV: $${{ vars.NODE_ENV }}
+    - name: Checking to see if it works
+      run: cat .env
+    
     - name: Upload bundles.js artifact
       uses: actions/upload-artifact@v4
       with:
